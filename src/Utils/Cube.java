@@ -23,7 +23,7 @@ import java.nio.FloatBuffer;
  */
 
 
-public class Cube {
+public class Cube {//todo convert to use Vector3f
 
 
     private Point origin;

@@ -1,11 +1,12 @@
 package Utils;
 
+import org.lwjgl.util.vector.Vector3f;
+
 /**
  * Created by usr on 11/14/2016.
  *
  */
-public class Point {
-    public float x,y,z;
+public class Point extends Vector3f{
     public float r,g,b;
     public Point(float x,float y,float z,float r,float g,float b){
         this.x=x;
@@ -24,6 +25,14 @@ public class Point {
         this.b=1;
     }
 
+    public Point(Vector3f v){
+        this.x=v.getX();
+        this.y=v.getY();
+        this.z=v.getZ();
+        this.r=1;
+        this.g=1;
+        this.b=1;
+    }
     public Point(){
         this.x=0;
         this.y=0;
@@ -32,7 +41,7 @@ public class Point {
         this.g=1;
         this.b=1;
     }
-    public Point findOnLine(Point b,float dist){
+     Point findOnLine(Point b,float dist){
         float dt=distance(b);
         float t=dist/dt;
         return new Point(
@@ -58,7 +67,7 @@ public class Point {
         float pz = a.z - this.z;
         return (float)Math.sqrt(px * px + py * py + pz * pz);
     }
-    public boolean compare(Point a){
+    public boolean equal(Point a){
         return a.x==x&&a.y==y&&a.z==z;
     }
     public void setXYZ(float x,float y,float z){
@@ -78,19 +87,30 @@ public class Point {
     public Point div(Point B,float d){
         return new Point((x+B.x)/d,(y+B.y)/d,(z+B.z)/d);
     }
-    public Point sub(Point p){
+     Point sub(Point p){
         return new Point(x-p.x,y-p.y,z-p.z);
     }
     public Point sum(Point p){
         return new Point(x+p.x,y+p.y,z+p.z);
     }
-    public void normalize(){
+     void sum(float x,float y,float z){
+        this.x+=x;
+        this.y+=y;
+        this.z+=z;
+    }
+     void normalize(){
         float v=(float) Math.sqrt(x*x+y*y+z*z);
         setXYZ(x/v,y/v,z/v);
+    }
+    public Point round(){
+        setXYZ((float) Math.ceil(x),(float)Math.ceil(y),(float)Math.ceil(z));
+        return this;
     }
     @Override
     public String toString() {
         return "("+x+","+y+","+z+")";
     }
-
+public Point clone(){
+    return new Point(x,y,z,r,g,b);
+}
 }

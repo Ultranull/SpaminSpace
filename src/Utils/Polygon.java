@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
  * Created by usr on 11/14/2016.
  *
  */
-public class Polygon {
+public class Polygon {//todo convert to use Vector3f
 
     private Point origin;
     private Point[] verts;
@@ -54,15 +54,13 @@ public class Polygon {
             glNormal3f(norm.x,norm.y,norm.z);
         for (int i = 0; i < verts.length; i++) {
             Point vert = verts[i];
+            glColor3f(vert.r, vert.g, vert.b);
             if (hasTex)
                 glTexCoord2f(texture[i].x,texture[i].y);
-            else
-                glColor3f(vert.r, vert.g, vert.b);
             glVertex3f(vert.x, vert.y, vert.z);
         }
         glEnd();
         glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
     }
     public static void draw(Point[] verts,boolean wire){
         Point[] normals=new Point[verts.length-2];
@@ -129,6 +127,7 @@ public class Polygon {
         texture=texvert;
         texid=id;
     }
+    public void setTex(Point[] tv){texture=tv;}
     public static Point calcnormal(Point A,Point B,Point C){
         Point V1= new Point(B.x-A.x,B.y-A.y,B.z-A.z);
         Point V2= new Point(C.x-A.x,C.y-A.y,C.z-A.z);
@@ -136,7 +135,7 @@ public class Polygon {
         surfaceNormal.x = (V1.y*V2.z) - (V1.z*V2.y);
         surfaceNormal.y = (V1.z*V2.x) - (V1.x*V2.z);
         surfaceNormal.z = (V1.x*V2.y) - (V1.y*V2.x);
-        surfaceNormal.normalize();
+        surfaceNormal.normalise();
 //        surfaceNormal.makep();
         return surfaceNormal;
     }

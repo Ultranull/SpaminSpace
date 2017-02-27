@@ -29,8 +29,8 @@ public class Ship {
                 new Point(1,1,0),
         }, texid[1]);
         left=new Polygon(new Point[]{
-                new Point(0,.125f,0,    1,1,1).sum(origin),
-                new Point(0,0,-1,     1,1,1).sum(origin),
+                new Point(0,.125f,0,   1,1,1).sum(origin),
+                new Point(0,0,-1,      1,1,1).sum(origin),
                 new Point(-.5f,0,.5f,  1,1,1).sum(origin),
         });
         left.HasTex(new Point[]{

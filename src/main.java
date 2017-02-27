@@ -1,24 +1,20 @@
 
 
 import Utils.*;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
-import sun.awt.image.ImageWatched;
 
 
-import java.nio.FloatBuffer;
+import java.security.Key;
 import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class main {
+public class main {//todo make spawner with different paths and stuff yeh
 
     long lastFrame;
     int fps;
@@ -50,26 +46,31 @@ public class main {
 
         Display.destroy();
     }
-    Path enter=new Path(new Point[]{
-            new Point(20,20,0),
-            new Point(10,10,0),
-            new Point(0,5,0),
+    Point ms=new Point(0,0,-30);
+    Path enterm=new Path(new Point[]{
+            ms,
+            new Point(0,0,-5),
     },false);
     private void init(){
 
         Material.init(new String[]{
                 "back","images\\blueHatBack.png",
                 "front","images\\blueHatFront.png",
-                "dopen","images\\dopen.jpg",
-                "dclose","images\\dclose.jpg",
+                "dopen","images\\dopen.png",
+                "dclose","images\\dclose.png",
+                "sky","images\\space.jpg",
+                "spam","images\\Spam_can.png"
         });
         player=new Ship(new Point(0,0,0),new int[]{Material.get("back"),Material.get("front")});
-        Alien derek=new Alien(new Point(0,100,0),new int[]{
-                Material.get("dopen"),
-                Material.get("dclose"),
-        });
         fleet=new LinkedList<>();
-        fleet.add(derek);
+        pew=new LinkedList<>();
+
+        for(int i=0;i<10;i++)
+            fleet.add(new Alien(new Point(5-i,0,100),new int[]{
+                    Material.get("dopen"),
+                    Material.get("dclose"),
+            }));
+
     }
     private void initGL() {
 
@@ -99,6 +100,7 @@ public class main {
     int ticks =0;
     Ship player;
     LinkedList<Alien> fleet;
+    LinkedList<Spam> pew;
     private void update(int delta) {
         initGL();
         updateFPS();
@@ -106,10 +108,24 @@ public class main {
 
         glClear(GL_COLOR_BUFFER_BIT
                 | GL_DEPTH_BUFFER_BIT);
-
-        for (Alien a :fleet) {
-            a.draw(0,0,0,ticks);
+        drawback();
+        for (int i = 0; i < fleet.size(); i++) {
+            Alien a = fleet.get(i);
+            if(a.isdead) {
+                fleet.remove(a);
+                i--;
+            }else
+                a.draw(30,0,0,ticks,pew);
         }
+        for (int i = 0; i < pew.size(); i++) {
+            Spam s = pew.get(i);
+            if(s.isdone) {
+                pew.remove(s);
+                i--;
+            }else
+            s.draw(ticks);
+        }
+
         player.draw();
         int ii=10;
         if(true)
@@ -127,13 +143,27 @@ public class main {
         pointset(point2);
         glEnd();
     }
-
-
     private void pointset(Point point){
         glColor3f(point.r,point.g,point.b);
         glVertex3f(point.x, point.y,point.z);
     }
-
+    private void drawback(){
+        glPushMatrix();
+        glRotatef(-30,1,0,0);
+        glTranslatef(0,0,-10);
+        Polygon.draw(new Point[]{
+                new Point(-30,30,0),
+                new Point(-30,-30,0),
+                new Point(30,-30,0),
+                new Point(30,30,0),
+        },new Point[]{
+                new Point(0,0,0),
+                new Point(0,1,0),
+                new Point(1,1,0),
+                new Point(1,0,0),
+        },Material.get("sky"));
+        glPopMatrix();
+    }
     private void getInput(){
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
@@ -148,11 +178,22 @@ public class main {
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
             player.move(0,0,.125f,10,-10);
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-            for(Alien a:fleet) {
-                a.setPath(enter);
-            }
+        if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+
         }
+        if(Keyboard.next()&&!Keyboard.getEventKeyState())
+            switch (Keyboard.getEventKey()){
+                case Keyboard.KEY_SPACE:
+                    pew.add(new Spam(player,Material.get("spam")));
+                    break;
+                case Keyboard.KEY_P:
+                    for(Alien a:fleet) {
+                        enterm.translate(a.origin.getX(),0,0);
+                        a.setPath(enterm.clone());
+                        enterm.translate(-a.origin.getX(),0,0);
+                    }
+                    break;
+            }
     }
     public int getDelta() {
         long time = getTime();
