@@ -75,6 +75,9 @@ public class Path {
     }
     public boolean isDone(){return done;}
 
+    public boolean isLoops() {
+        return loops;
+    }
 
     private static class node{
         Point p;

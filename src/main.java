@@ -11,6 +11,7 @@ import org.lwjgl.util.glu.GLU;
 
 import java.security.Key;
 import java.util.LinkedList;
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -46,30 +47,48 @@ public class main {//todo make spawner with different paths and stuff yeh
 
         Display.destroy();
     }
+
+    Ship player;
+    LinkedList<Alien> fleet;
+    LinkedList<Spam> pew;
+    LinkedList<explosion>b;
     Point ms=new Point(0,0,-30);
     Path enterm=new Path(new Point[]{
             ms,
-            new Point(0,0,-5),
+            new Point(0,0,0),
     },false);
+    Spawner left;
     private void init(){
 
         Material.init(new String[]{
-                "back","images\\blueHatBack.png",
-                "front","images\\blueHatFront.png",
-                "dopen","images\\dopen.png",
-                "dclose","images\\dclose.png",
-                "sky","images\\space.jpg",
-                "spam","images\\Spam_can.png"
+                "back"   ,"images\\blueHatBack.png",
+                "front"  ,"images\\blueHatFront.png",
+                "dopen"  ,"images\\dopen.png",
+                "dclose" ,"images\\dclose.png",
+                "jopen"  ,"images\\jopen.png",
+                "jclosed","images\\jclosed.png",
+                "mopen"  ,"images\\mopen.png",
+                "mclosed","images\\mclosed.png",
+                "topen"  ,"images\\topen.png",
+                "tclosed","images\\tclosed.png",
+                "sky"    ,"images\\space.jpg",
+                "spam"   ,"images\\Spam_can.png",
+                "boom1"   ,"images\\boom1.png",
+                "boom2"   ,"images\\boom2.png",
+                "boom3"   ,"images\\boom3.png",
         });
         player=new Ship(new Point(0,0,0),new int[]{Material.get("back"),Material.get("front")});
         fleet=new LinkedList<>();
         pew=new LinkedList<>();
-
-        for(int i=0;i<10;i++)
-            fleet.add(new Alien(new Point(5-i,0,100),new int[]{
-                    Material.get("dopen"),
-                    Material.get("dclose"),
-            }));
+        b=new LinkedList<>();
+        left=new Spawner(fleet,new Path(new Point[]{
+                new Point(-20,0,-5),
+                new Point(-5,0,0),
+                new Point(0,0,-5),
+                new Point(5,0,0),
+                new Point(20,0,-5),
+        },false));
+        left.burst(0,5);
 
     }
     private void initGL() {
@@ -98,20 +117,30 @@ public class main {//todo make spawner with different paths and stuff yeh
 
 
     int ticks =0;
-    Ship player;
-    LinkedList<Alien> fleet;
-    LinkedList<Spam> pew;
     private void update(int delta) {
         initGL();
         updateFPS();
         getInput();
 
+        left.update(ticks);
+
         glClear(GL_COLOR_BUFFER_BIT
                 | GL_DEPTH_BUFFER_BIT);
+
+        int ii=10;
+        if(true)
+            for (int i = -ii; i < ii; i++) {
+//            drawLine(new Point(i, ii, 0, 0, 0, 1), new Point(i, -ii, 0, 0, 0, 1));//y blue
+//            drawLine(new Point(0, i, ii, 0, 1, 0), new Point(0, i, -ii, 0, 1, 0));//z green
+                drawLine(new Point(ii, 0, i, 1, 0, 0), new Point(-ii, 0, i, 1, 0, 0));//x red
+                glColor3f(1,1,1);
+            }
         drawback();
+        player.draw();
         for (int i = 0; i < fleet.size(); i++) {
             Alien a = fleet.get(i);
             if(a.isdead) {
+                b.add(new explosion(Material.get("boom1","boom2","boom3"),a.origin));
                 fleet.remove(a);
                 i--;
             }else
@@ -123,18 +152,17 @@ public class main {//todo make spawner with different paths and stuff yeh
                 pew.remove(s);
                 i--;
             }else
-            s.draw(ticks);
+                s.draw(ticks);
+        }
+        for (int i = 0; i < b.size(); i++) {
+            explosion s = b.get(i);
+            if(s.dead) {
+                b.remove(s);
+                i--;
+            }else
+                s.draw(30,0,0,ticks);
         }
 
-        player.draw();
-        int ii=10;
-        if(true)
-            for (int i = -ii; i < ii; i++) {
-//            drawLine(new Point(i, ii, 0, 0, 0, 1), new Point(i, -ii, 0, 0, 0, 1));//y blue
-//            drawLine(new Point(0, i, ii, 0, 1, 0), new Point(0, i, -ii, 0, 1, 0));//z green
-                drawLine(new Point(ii, 0, i, 1, 0, 0), new Point(-ii, 0, i, 1, 0, 0));//x red
-                glColor3f(1,1,1);
-            }
         ticks +=1;
     }
     private void drawLine(Point point, Point point2) {
@@ -166,32 +194,29 @@ public class main {//todo make spawner with different paths and stuff yeh
     }
     private void getInput(){
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_A)){
             player.move(-.125f,0,0,10,-10);
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_D)){
             player.move(.125f,0,0,10,-10);
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_W)){
             player.move(0,0,-.125f,10,-10);
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_S)){
             player.move(0,0,.125f,10,-10);
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+            Display.destroy();
+            System.exit(-1);
         }
         if(Keyboard.next()&&!Keyboard.getEventKeyState())
             switch (Keyboard.getEventKey()){
                 case Keyboard.KEY_SPACE:
                     pew.add(new Spam(player,Material.get("spam")));
                     break;
-                case Keyboard.KEY_P:
-                    for(Alien a:fleet) {
-                        enterm.translate(a.origin.getX(),0,0);
-                        a.setPath(enterm.clone());
-                        enterm.translate(-a.origin.getX(),0,0);
-                    }
+                case Keyboard.KEY_E:
+                    left.burst((int)rand(0,4),4);
                     break;
             }
     }
@@ -217,7 +242,10 @@ public class main {//todo make spawner with different paths and stuff yeh
     double sin(double a){return Math.sin(Math.toRadians(a));}
     double cos(double a){return Math.cos(Math.toRadians(a));}
 
-
+    float rand(float min,float max){
+        Random r=new Random();
+        return r.nextFloat() * (max - min) + min;
+    }
 
 
 

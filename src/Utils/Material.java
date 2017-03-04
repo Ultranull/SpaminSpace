@@ -1,5 +1,6 @@
 package Utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -29,5 +30,11 @@ public class Material {
     }
     public static int get(String n){
         return mats.get(n);
+    }
+    public static int[] get(String... n){
+        int[] i=new int[n.length];
+        for(int f=0;f<n.length;f++)
+            i[f]=mats.get(n[f]);
+        return i;
     }
 }

@@ -15,11 +15,14 @@ public class Alien {
     Path path;
     boolean hasPath=false;
     boolean isdead=false;
-    int moverate=1;
+    boolean dwd=false;
+    int moverate=3;
+    int id;
     public Alien(Point o,int[] texs){
         origin=o;
         sprite=new Sprite(texs,origin,0,1);
         sprite.rate=20;
+        id=(int)(Math.random()*100);
     }
     public void setPath(Path p){
         hasPath=true;
@@ -28,6 +31,8 @@ public class Alien {
     }
     public void draw(float rx, float ry, float rz, int ticks, LinkedList<Spam> pew){
         if(hasPath) {
+            if(path.isDone()&&!path.isLoops()&&dwd)
+                isdead=true;
             origin = path.get();
             if (ticks % moverate == 0) {
                 path.next();
