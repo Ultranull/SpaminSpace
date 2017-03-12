@@ -27,7 +27,7 @@ public class Textureloader {
 
         ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL); //4 for RGBA, 3 for RGB
 
-        for(int y = 0; y < image.getHeight(); y++){
+        for(int y = image.getHeight() - 1; y >= 0; y--){
             for(int x = 0; x < image.getWidth(); x++){
                 int pixel = pixels[y * image.getWidth() + x];
                 buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
@@ -56,8 +56,9 @@ public class Textureloader {
     }
 
     public static BufferedImage loadImage(String loc) {
+        String t=System.getProperty("user.dir")+"/"+loc;
         try {
-            return ImageIO.read(new File(System.getProperty("user.dir")+"/"+loc));
+            return ImageIO.read(new File(t));
         } catch (IOException e) {
             System.out.println(loc+": IMAGE INCORRECTLY LOADED!!!");
             System.exit(-1);

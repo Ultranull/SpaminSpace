@@ -1,3 +1,4 @@
+import ModelUtil.Model;
 import Utils.Point;
 import Utils.Polygon;
 import Utils.Textureloader;
@@ -11,11 +12,13 @@ public class Ship {
     Polygon left;
     Polygon right;
     Polygon back;
+    Model bear;
     int[] texid;
     public Ship(Point p,int[] t){
         origin=p;
         texid=t;
-        polyinit();
+//        polyinit();
+        bear=new Model(origin,"models\\lowpolybear13.obj");
     }
     private void polyinit(){
         right=new Polygon(new Point[]{
@@ -55,11 +58,13 @@ public void move(float x,float y,float z,float max,float min){
     origin.x=origin.x>max?min:origin.x<min?max:origin.x;
     origin.y=origin.y>max?min:origin.y<min?max:origin.y;
     origin.z=origin.z>max?min:origin.z<min?max:origin.z;
-    polyinit();
+    bear.origin=origin;
+//    polyinit();
 }
     public void draw(){
-        left.draw();
-        right.draw();
-        back.draw();
+//        left.draw();
+//        right.draw();
+//        back.draw();
+        bear.VBOrender(origin);
     }
 }

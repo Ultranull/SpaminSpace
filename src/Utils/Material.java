@@ -15,11 +15,16 @@ public class Material {
     public static HashMap<String,Integer> mats;
     public static void init(String[] textures){
         mats=new HashMap<>();
-        for(int i=0;i<textures.length;i+=2)
-            mats.put(textures[i],loadTexture(loadImage(textures[i+1])));
+        for(int i=0;i<textures.length;i+=2) {
+            System.out.println("--loading: "+textures[i+1]);
+            mats.put(textures[i], loadTexture(loadImage(textures[i + 1])));
+        }
     }
-    public static void addMat(String name,String tex){
-        mats.put(name,loadTexture(loadImage(tex)));
+    public static int addMat(String name,String tex){
+        int id;
+        id=loadTexture(loadImage(tex));
+        mats.put(name,id);
+        return id;
     }
     public static int[] addMat(String name,String loc,int ol,int oh,int not,int il,int ih){
         int[] b=loadTexture(loadImage(loc,ol,oh,not,il,ih));

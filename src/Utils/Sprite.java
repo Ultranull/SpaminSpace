@@ -15,7 +15,7 @@ public class Sprite {
     private int[] animationindex;
     private boolean hasai=false;
     private boolean flippedH=false;
-    private boolean flippedV=false;
+    private boolean flippedV=true;
     private int ts;
     private int te;
     private int index=0;
@@ -31,10 +31,10 @@ public class Sprite {
                 new Point(.5f,0,0),
                 new Point(.5f,1,0)});
         im.HasTex(new Point[]{
-                new Point(0,0,0),
-                new Point(0,1,0),
                 new Point(1,1,0),
                 new Point(1,0,0),
+                new Point(0,0,0),
+                new Point(0,1,0),
         },texs[ts]);
 
     }

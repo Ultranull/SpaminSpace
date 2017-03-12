@@ -9,12 +9,9 @@ import java.util.LinkedList;
  * Created by usr on 2/11/2017.
  *
  */
-public class Alien {
-    Point origin;
-    Sprite sprite;
+public class Alien extends HasSprite{
     Path path;
     boolean hasPath=false;
-    boolean isdead=false;
     boolean dwd=false;
     int moverate=3;
     int id;
@@ -29,7 +26,14 @@ public class Alien {
         path=p;
         p.normalize(1/4f);
     }
-    public void draw(float rx, float ry, float rz, int ticks, LinkedList<Spam> pew){
+    public void checkcol(LinkedList<Spam> pew){
+        for(Spam s:pew)
+            if(s.origin.distance(origin)<1) {
+                isdead = true;
+                s.isdead=true;
+            }
+    }
+    public void draw(int ticks){
         if(hasPath) {
             if(path.isDone()&&!path.isLoops()&&dwd)
                 isdead=true;
@@ -38,13 +42,8 @@ public class Alien {
                 path.next();
             }
         }
-        for(Spam s:pew)
-            if(s.origin.distance(origin)<1) {
-                isdead = true;
-                s.isdone=true;
-            }
         sprite.setOr(origin);
-        sprite.draw(rx,ry,rz,ticks);
+        sprite.draw(30,0,0,ticks);
     }
     public boolean haspath(){
         return hasPath;

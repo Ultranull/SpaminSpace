@@ -22,6 +22,7 @@ public class main {//todo make spawner with different paths and stuff yeh
     long lastFPS;
 
     public void start() {
+        System.out.println("setting up display...");
         try {
             Display.setDisplayMode(new DisplayMode(800, 600));
             Display.create();
@@ -30,6 +31,7 @@ public class main {//todo make spawner with different paths and stuff yeh
             e.printStackTrace();
             System.exit(0);
         }
+        System.out.println("setting up openGL...");
         initGL();
         init();
         getDelta();
@@ -44,7 +46,7 @@ public class main {//todo make spawner with different paths and stuff yeh
                 initGL();
             }
         }
-
+System.out.println("closing...");
         Display.destroy();
     }
 
@@ -59,7 +61,7 @@ public class main {//todo make spawner with different paths and stuff yeh
     },false);
     Spawner left;
     private void init(){
-
+        System.out.println("loading textures...");
         Material.init(new String[]{
                 "back"   ,"images\\blueHatBack.png",
                 "front"  ,"images\\blueHatFront.png",
@@ -139,16 +141,18 @@ public class main {//todo make spawner with different paths and stuff yeh
         player.draw();
         for (int i = 0; i < fleet.size(); i++) {
             Alien a = fleet.get(i);
-            if(a.isdead) {
-                b.add(new explosion(Material.get("boom1","boom2","boom3"),a.origin));
+            if (a.isdead) {
+                b.add(new explosion(Material.get("boom1", "boom2", "boom3"), a.origin));
                 fleet.remove(a);
                 i--;
-            }else
-                a.draw(30,0,0,ticks,pew);
+            } else {
+                a.checkcol(pew);
+                a.draw(ticks);
+            }
         }
         for (int i = 0; i < pew.size(); i++) {
             Spam s = pew.get(i);
-            if(s.isdone) {
+            if(s.isdead) {
                 pew.remove(s);
                 i--;
             }else
@@ -156,11 +160,11 @@ public class main {//todo make spawner with different paths and stuff yeh
         }
         for (int i = 0; i < b.size(); i++) {
             explosion s = b.get(i);
-            if(s.dead) {
+            if(s.isdead) {
                 b.remove(s);
                 i--;
             }else
-                s.draw(30,0,0,ticks);
+                s.draw(ticks);
         }
 
         ticks +=1;
@@ -246,7 +250,6 @@ public class main {//todo make spawner with different paths and stuff yeh
         Random r=new Random();
         return r.nextFloat() * (max - min) + min;
     }
-
 
 
 }
