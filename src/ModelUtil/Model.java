@@ -60,7 +60,7 @@ public class Model {
 
             for(int i=0;i<face.norms.length;i++){
                 Vector3f n1 = normals.get(face.norms[i] - 1);
-                glNormal3f(n1.x, n1.y, n1.z);
+                glNormal3f(n1.x, n1.y, n1 .z);
                 Vector3f v1 = vertices.get(face.verts[i] - 1);
                 glVertex3f(v1.x, v1.y, v1.z);
             }

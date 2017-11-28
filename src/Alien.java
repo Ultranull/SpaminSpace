@@ -1,3 +1,4 @@
+import Utils.Material;
 import Utils.Path;
 import Utils.Point;
 import Utils.Sprite;
@@ -31,6 +32,7 @@ public class Alien extends HasSprite{
             if(s.origin.distance(origin)<1) {
                 isdead = true;
                 s.isdead=true;
+                Material.playsound("boom.wav",0);
             }
     }
     public void draw(int ticks){

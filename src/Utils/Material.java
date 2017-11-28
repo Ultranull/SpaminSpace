@@ -1,5 +1,9 @@
 package Utils;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -41,5 +45,15 @@ public class Material {
         for(int f=0;f<n.length;f++)
             i[f]=mats.get(n[f]);
         return i;
+    }
+
+    public static void playsound(String file,int loops){
+        try {
+            Clip clip = AudioSystem.getClip();
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("sounds\\"+file));
+            clip.open(ais);
+            clip.loop(loops);
+        }catch (Exception e){e.printStackTrace();}
+
     }
 }

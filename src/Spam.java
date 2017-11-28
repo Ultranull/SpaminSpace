@@ -21,7 +21,7 @@ public class Spam extends HasSprite{
         origin=p.origin;
         sprite=new Sprite(new int[]{tid},origin,0,0);
     }
-    int rot=0;
+    int rot=1;
     public void draw(int ticks){
         origin = path.get();
         if (ticks % moverate == 0) {
@@ -31,6 +31,6 @@ public class Spam extends HasSprite{
 
         isdead=path.isDone();
         if(!isdead)
-            sprite.draw(30,0,rot+=2,ticks);
+            sprite.draw(0,0,rot+=2,ticks);
     }
 }

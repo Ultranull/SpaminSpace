@@ -9,6 +9,11 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
+import java.net.URL;
 import java.security.Key;
 import java.util.LinkedList;
 import java.util.Random;
@@ -20,9 +25,8 @@ public class main {//todo make spawner with different paths and stuff yeh
     long lastFrame;
     int fps;
     long lastFPS;
-
     public void start() {
-        System.out.println("setting up display...");
+        System.out.println("setting up display...( ͡° ͜ʖ ͡°)");
         try {
             Display.setDisplayMode(new DisplayMode(800, 600));
             Display.create();
@@ -91,7 +95,7 @@ System.out.println("closing...");
                 new Point(20,0,-5),
         },false));
         left.burst(0,5);
-
+Material.playsound("music.wav",99);
     }
     private void initGL() {
 
@@ -217,10 +221,11 @@ System.out.println("closing...");
         if(Keyboard.next()&&!Keyboard.getEventKeyState())
             switch (Keyboard.getEventKey()){
                 case Keyboard.KEY_SPACE:
+                    Material.playsound("bear.wav",0);
                     pew.add(new Spam(player,Material.get("spam")));
                     break;
                 case Keyboard.KEY_E:
-                    left.burst((int)rand(0,4),4);
+                    left.burst((int)rand(0,2),4);
                     break;
             }
     }
