@@ -53,14 +53,14 @@ public class Ship {
                 new Point(1,1,0),
         }, texid[0]);
     }
-public void move(float x,float y,float z,float max,float min){
-    origin=origin.sum(new Point(x,y,z));
-    origin.x=origin.x>max?min:origin.x<min?max:origin.x;
-    origin.y=origin.y>max?min:origin.y<min?max:origin.y;
-    origin.z=origin.z>max?min:origin.z<min?max:origin.z;
-    bear.origin=origin;
+    public void move(float x,float y,float z,float max,float min,float delta){
+        origin=origin.sum(new Point(x,y,z).mult(delta/100));
+        origin.x=origin.x>max?min:origin.x<min?max:origin.x;
+        origin.y=origin.y>max?min:origin.y<min?max:origin.y;
+        origin.z=origin.z>max?min:origin.z<min?max:origin.z;
+        bear.origin=origin;
 //    polyinit();
-}
+    }
     public void draw(){
 //        left.draw();
 //        right.draw();

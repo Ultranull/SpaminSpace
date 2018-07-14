@@ -44,13 +44,13 @@ public class main {//todo make spawner with different paths and stuff yeh
             int delta = getDelta();
             update(delta);
             Display.update();
-            Display.sync(60); // cap fps to 60fps
+            Display.sync(dfps); // cap fps to 60fps
             if (Display.wasResized()) {
                 glViewport(0, 0, Display.getWidth(), Display.getHeight());
                 initGL();
             }
         }
-System.out.println("closing...");
+        System.out.println("closing...");
         Display.destroy();
     }
 
@@ -95,7 +95,7 @@ System.out.println("closing...");
                 new Point(20,0,-5),
         },false));
         left.burst(0,5);
-Material.playsound("music.wav",99);
+        Material.playsound("music.wav",99);
     }
     private void initGL() {
 
@@ -126,7 +126,7 @@ Material.playsound("music.wav",99);
     private void update(int delta) {
         initGL();
         updateFPS();
-        getInput();
+        getInput(delta);
 
         left.update(ticks);
 
@@ -200,19 +200,20 @@ Material.playsound("music.wav",99);
         },Material.get("sky"));
         glPopMatrix();
     }
-    private void getInput(){
+    int dfps=60;
+    private void getInput(int delta){
 
         if (Keyboard.isKeyDown(Keyboard.KEY_A)){
-            player.move(-.125f,0,0,10,-10);
+            player.move(-.25f,0,0,10,-10,delta);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_D)){
-            player.move(.125f,0,0,10,-10);
+            player.move(.25f,0,0,10,-10,delta);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_W)){
-            player.move(0,0,-.125f,10,-10);
+            player.move(0,0,-.25f,10,-10,delta);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S)){
-            player.move(0,0,.125f,10,-10);
+            player.move(0,0,.25f,10,-10,delta);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
             Display.destroy();
@@ -225,7 +226,13 @@ Material.playsound("music.wav",99);
                     pew.add(new Spam(player,Material.get("spam")));
                     break;
                 case Keyboard.KEY_E:
-                    left.burst((int)rand(0,2),4);
+                    left.burst((int)rand(0,4),10);
+                    break;
+                case Keyboard.KEY_UP:
+                    dfps+=10;
+                    break;
+                case Keyboard.KEY_DOWN:
+                    dfps=dfps<=0?0:dfps-10;
                     break;
             }
     }
@@ -237,6 +244,7 @@ Material.playsound("music.wav",99);
         return delta;
     }
     public long getTime() {
+        System.out.println(Sys.getTimerResolution());
         return (Sys.getTime() * 1000) / Sys.getTimerResolution();
     }
     public void updateFPS() {

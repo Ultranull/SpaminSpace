@@ -93,6 +93,9 @@ public class Point extends Vector3f{
     public Point sum(Point p){
         return new Point(x+p.x,y+p.y,z+p.z);
     }
+    public Point mult(float s){
+        return new Point(x*s,y*s,z*s);
+    }
      void sum(float x,float y,float z){
         this.x+=x;
         this.y+=y;

@@ -33,16 +33,16 @@ public class Spawner {
     public static Alien farm(int id,Point p,boolean dwd){
         int[] t;
         switch(id){
-//            case 0:
-//                t=new int[]{Material.get("dopen"), Material.get("dclose")};
-//                break;
             case 0:
+                t=new int[]{Material.get("dopen"), Material.get("dclose")};
+                break;
+            case 1:
                 t=new int[]{Material.get("jopen"), Material.get("jclosed")};
                 break;
-//            case 2:
-//                t=new int[]{Material.get("mopen"), Material.get("mclosed")};
-//                break;
-            case 1:
+            case 2:
+                t=new int[]{Material.get("mopen"), Material.get("mclosed")};
+                break;
+            case 3:
                 t=new int[]{Material.get("topen"), Material.get("tclosed")};
                 break;
             default:
